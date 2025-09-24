@@ -1,0 +1,39 @@
+
+class RegularAccount extends User implements Bank {
+    public static final double MIN_BALANCE = 1000;
+
+    RegularAccount(String accountholderName, double initialDeposit) {
+        super(accountholderName, initialDeposit);
+    }
+
+    @Override
+    public void createAccount(String accountholderName, double initialDeposit) {
+
+    }
+
+    @Override
+    public void deposit(double amount) {
+        setBal(getbal() + amount);
+        System.out.println("Deposit successful. New Balance: ₹" + getbal());
+    }
+
+    @Override
+    public void withdraw(double amount) throws Exception {
+        try {
+            if (getbal() - amount < MIN_BALANCE) {
+                throw new Exception("Insufficient balance!");
+            }
+            setBal(getbal() - amount);
+            System.out.println("Withdrawal successful. New Balance: ₹" + getbal());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Override
+    public void displayDetails() {
+        System.out.println("Account Holder: " + getaccountholderName() +
+                " | Account No: " + getaccNum() +
+                " | Balance: ₹" + getbal());
+    }
+}
