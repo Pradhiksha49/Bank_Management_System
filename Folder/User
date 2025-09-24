@@ -1,0 +1,31 @@
+
+abstract class User implements Bank {
+    private String accountholderName;
+    private int accNum;
+    private double bal;
+    static int usercount = 0;
+
+    User(String accountholderName, double bal) {
+        this.accountholderName = accountholderName;
+        this.accNum = 1000 + (++usercount);
+        this.bal = bal;
+    }
+
+    public String getaccountholderName() {
+        return accountholderName;
+    }
+
+    public int getaccNum() {
+        return accNum;
+    }
+
+    public double getbal() {
+        return bal;
+    }
+
+    public void setBal(double bal) {
+        this.bal = bal;
+    }
+
+    public abstract void displayDetails();
+}
