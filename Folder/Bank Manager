@@ -1,0 +1,121 @@
+
+import java.util.*;
+class BankManager {
+    private User[] accounts = new User[5];
+
+    public void addAccount(User account) {
+        if (User.usercount <= 5) {
+            accounts[User.usercount - 1] = account;
+        } else {
+            System.out.println("Cannot create more accounts. Limit reached.");
+        }
+    }
+
+    public User getUserByAccountNumber(int accNo) {
+        for (User acc : accounts) {
+            if (acc != null && acc.getaccNum() == accNo) {
+                return acc;
+            }
+        }
+        return null;
+    }
+
+    public void handleMenu() {
+        Scanner sc = new Scanner(System.in);
+        while (true) {
+            System.out.println("\n----- Welcome to OOPS Bank -----");
+            System.out.println("1. Create Account");
+            System.out.println("2. Deposit");
+            System.out.println("3. Withdraw");
+            System.out.println("4. Check Balance");
+            System.out.println("5. Exit.");
+            System.out.print("Enter choice: ");
+            int choice = sc.nextInt();
+
+            try {
+                switch (choice) {
+                    case 1:
+                        if (User.usercount >= 5) {
+                            System.out.println("Max account limit reached!");
+                            break;
+                        }
+                        sc.nextLine();
+                        System.out.print("Enter Name: ");
+                        String name = sc.nextLine();
+                        System.out.print("Initial Deposit: ");
+                        double deposit = sc.nextDouble();
+                        System.out.print("Account Type (1=Regular, 2=Premium): ");
+                        int type = sc.nextInt();
+
+                        User account;
+                        if (type == 1) {
+                            account = new RegularAccount(name, deposit);
+                        } else {
+                            account = new PremiumAccount(name, deposit);
+                        }
+                        addAccount(account);
+                        System.out.println("Account created successfully! Account No: " + account.getaccNum());
+                        break;
+
+                    case 2:
+                        System.out.print("Enter Account Number: ");
+                        int accNumber = sc.nextInt();
+                        User accObj = getUserByAccountNumber(accNumber);
+                        if (accObj == null) {
+                            System.out.println("Account not found!");
+                            break;
+                        }
+                        System.out.print("Enter Amount to Deposit: ");
+                        double amount = sc.nextDouble();
+                        if (TransactionUtils.isValidAmount(amount)) {
+                            accObj.deposit(amount);
+                        } else {
+                            System.out.println("Invalid amount!");
+                        }
+                        break;
+
+                    case 3:
+                        System.out.print("Enter Account Number: ");
+                        int accNoW = sc.nextInt();
+                        User accW = getUserByAccountNumber(accNoW);
+                        if (accW == null) {
+                            System.out.println("Account not found!");
+                            break;
+                        }
+                        System.out.print("Enter Amount to Withdraw: ");
+                        double wAmount = sc.nextDouble();
+                        if (TransactionUtils.isValidAmount(wAmount)) {
+                            accW.withdraw(wAmount);
+                        } else {
+                            System.out.println("Invalid amount!");
+                        }
+                        break;
+
+                    case 4:
+                        System.out.print("Enter Account Number: ");
+                        int accNoB = sc.nextInt();
+                        User accB = getUserByAccountNumber(accNoB);
+                        if (accB == null) {
+                            System.out.println("Account not found!");
+                            break;
+                        }
+                        System.out.println("Balance for " + accB.getaccountholderName() +
+                                " (" + accB.getaccNum() + "): ₹" + accB.getbal());
+                        break;
+
+                    case 5:
+                        System.out.println("Thank you for banking with us!");
+                        return;
+
+                    default:
+                        System.out.println("Invalid choice!");
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            } finally {
+                TransactionUtils.printSeparator();
+                System.out.println("Transaction completed.");
+            }
+        }
+    }
+}
